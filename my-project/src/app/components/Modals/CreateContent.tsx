@@ -1,14 +1,19 @@
 "use client"
+import { useGlobalState } from '@/app/context/globalProvider'
 import axios from 'axios'
 import React, { useState } from 'react'
 import toast from 'react-hot-toast'
-
+import styled from 'styled-components'
+import Button from '../Button/Button'
+import { plus } from '@/utils/Icons'
 const CreateContent = () => {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [date, setDate] = useState("")
   const [completed, setCompleted] = useState(false)
   const [important, setImportant] = useState(false)
+
+  const { theme, allTasks, closeModal } = useGlobalState()
 
   const handleChange = (name: string) => (e: any) => {
     switch (name) {
@@ -52,7 +57,9 @@ const CreateContent = () => {
 
       if (!res.data.error) {
         toast.success("Task created successfully.");
-    
+        allTasks()
+        closeModal()
+
       }
     } catch (error) {
       toast.error("Something went wrong.");
@@ -60,28 +67,28 @@ const CreateContent = () => {
     }
 };
   return (
-    <form onSubmit={handleSubmit}>
+    <CreateContentStyled onSubmit={handleSubmit} theme={theme}>
       <h1>Create a Task</h1>
       <div className="input-control">
-        <label htmlFor="title">Title </label>
+        <label htmlFor="title">Item</label>
         <input
           type="text"
           id="title"
           value={title}
           name="title"
           onChange={handleChange("title")}
-          placeholder=" e.g, Watch a video from Fireship."
+          placeholder="Item name."
         />
       </div>
       <div className="input-control">
-        <label htmlFor="description">Description</label>
+        <label htmlFor="description">Notes</label>
         <textarea
           value={description}
           onChange={handleChange("description")}
           name="description"
           id="description"
           rows={4}
-          placeholder="e.g, Watch a video about Next.js Auth"
+          placeholder="Type, amount"
         ></textarea>
       </div>
       <div className="input-control">
@@ -95,7 +102,7 @@ const CreateContent = () => {
         />
       </div>
       <div className="input-control toggler">
-        <label htmlFor="completed">Toggle Completed </label>
+        <label htmlFor="completed">Have</label>
         <input
           value={completed.toString()}
           onChange={handleChange("completed")}
@@ -105,7 +112,7 @@ const CreateContent = () => {
         />
       </div>
       <div className="input-control toggler">
-        <label htmlFor="important">Toggle Important </label>
+        <label htmlFor="important">Not have</label>
         <input
           value={important.toString()}
           onChange={handleChange("important")}
@@ -115,13 +122,77 @@ const CreateContent = () => {
         />
       </div>
 
-      <div className="submit-btn">
-        <button type='submit'>
-          <span> Submit</span>
-        </button>
+      <div className="submit-btn flex justify-end">
+        <Button 
+          type='submit'
+          name='Create Task'
+          icon={plus}
+          padding={'0.5rem 1rem'}
+          borderRad={"0.8rem"}
+          fw={'200'}
+          fs={'1.2rem'}
+          color={theme.colorGrey1}
+          background={theme.colorGreenDark}
+          />
       </div>
-    </form>
+    </CreateContentStyled>
   )
 }
+
+const CreateContentStyled = styled.form`
+  >h1{
+    font-size: clamp(1.2rem, 5vw, 1,6rem);
+    font-weight: 600;
+  }
+
+
+  color: ${(props) => props.theme.colorGrey1};
+
+  .input-control{
+    position: relative;
+    margin: 1.6rem 0;
+    font-weight: 500;
+  }
+
+  label{
+    margin-bottom: 0.01rem;
+    display: inline-block;
+    font-size: clamp(0.9rem, 5vw, 1.2rem);
+  }
+  input, textarea{
+    width: 100%;
+
+    padding: 1rem;
+    resize: none;
+    background-color: ${(props) => props.theme.colorGreyDark};
+    color: ${(props) => props.theme.colorGrey2};
+    border-radius: 0.5rem;
+  }
+
+  .submit-btn button{
+    transition: all 0.35s ease-in-out;
+    i{
+      // color: ${(props) => props.theme.colorGrey0};
+    }
+    &:hover{
+      background: ${(props) => props.theme.colorPrimaryGreen} !important;
+      color: ${(props) => props.theme.colorWhite} !important;
+    }
+  }
+  
+  .toggler{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+
+    label{
+      flex: 1;
+    }
+    input{
+      width: intial;
+    }
+  }
+`
 
 export default CreateContent

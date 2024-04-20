@@ -1,4 +1,4 @@
-import prisma from "@/app/utils/conntect";
+import prisma from "@/utils/conntect";
 import { auth } from "@clerk/nextjs";
 import { NextResponse } from "next/server";
 
@@ -37,6 +37,8 @@ export async function POST(req: Request) {
       },
     });
 
+    // console.log("Task Created: ", task)
+
     return NextResponse.json(task);
 }catch{
     
@@ -50,13 +52,13 @@ export async function GET(req: Request) {
     if (!userId) {
       return NextResponse.json({ error: "Unauthorized", status: 401 });
     }
-
+    
     const tasks = await prisma.task.findMany({
       where: {
         userId,
       },
-    });
-
+    })
+    console.log("Tasks: ", tasks)
     return NextResponse.json(tasks);
   } catch (error) {
     console.log("ERROR GETTING TASKS: ", error);

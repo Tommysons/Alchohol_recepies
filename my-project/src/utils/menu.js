@@ -3,25 +3,25 @@ import { list, check, todo, home } from "./Icons";
 const menu = [
   {
     id: 1,
-    title: "All Tasks",
+    title: "Bar",
     icon: home,
     link: "/",
   },
   {
     id: 2,
-    title: "Important!",
+    title: "Don't have",
     icon: list,
     link: "/important",
   },
   {
     id: 3,
-    title: "Completed!",
+    title: "Have",
     icon: check,
     link: "/completed",
   },
   {
     id: 4,
-    title: "Do It Now",
+    title: "Recepies",
     icon: todo,
     link: "/incomplete",
   },
